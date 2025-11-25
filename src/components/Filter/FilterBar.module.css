@@ -1,0 +1,60 @@
+/* src/components/inventoryFilter/FilterBar.module.css */
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e5ded6;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+}
+
+.fieldRight {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.label {
+    color: #9c8f87;
+}
+
+.input,
+.select {
+    height: 36px;
+    padding: 0 8px;
+    border-radius: 6px;
+    border: 1px solid #e5ded6;
+    font-size: 13px;
+}
+
+.statusGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.clearButton {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #e5ded6;
+    background: #faf7f2;
+    font-size: 13px;
+    cursor: pointer;
+}
