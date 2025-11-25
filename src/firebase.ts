@@ -1,11 +1,7 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// src/firebase.ts
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyA44EFKpoewdA-pLS2zv-w_eKv8EXBz0_8",
     authDomain: "inventoryadd-7b7cf.firebaseapp.com",
@@ -13,9 +9,14 @@ const firebaseConfig = {
     storageBucket: "inventoryadd-7b7cf.firebasestorage.app",
     messagingSenderId: "248126878690",
     appId: "1:248126878690:web:ded3f4f3da84f32f97bfbb",
-    measurementId: "G-MC5HJ23446"
-};
+    measurementId: "G-MC5HJ23446",
+}
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Firebase 初期化
+const app = initializeApp(firebaseConfig)
+
+// Firestore のインスタンス
+export const db = getFirestore(app)
+
+// app を使いたい場合用（今は使ってなくてもOK）
+export { app }

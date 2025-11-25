@@ -16,12 +16,7 @@ export type AddItemPayload = {
     soldDate?: string
     discountDate?: string
     image?: string
-    marketplaces?: {
-        mercari?: boolean
-        yahoo?: boolean
-        rakuma?: boolean
-        instagram?: boolean
-    }
+    marketplaces?: Marketplaces
 }
 
 type AddItemDialogProps = {
@@ -54,42 +49,62 @@ export default function AddItemDialog({
     })
     const [error, setError] = useState<string | null>(null)
 
+    // ダイアログを開いていないときは何も描画しない
     if (!open) return null
-    const handleToggleMarkerplace = (key: keyof Marketplaces) => {
+
+    // 出品先のトグル
+    const handleToggleMarketplace = (key: keyof Marketplaces) => {
         setMarketplaces((prev) => ({
             ...prev,
             [key]: !prev[key],
         }))
     }
-    const payload: AddItemPayload = {
-        title: title.trim(),
-        genre,
-        status,
-        price: Number(price),
-        soldDate: soldDate || undefined,
-        discountDate: discountDate || undefined,
-        image: image || undefined,
-        marketplaces,
+
+    // 追加ボタン押下時
+    const handleSubmit = () => {
+        const trimmedTitle = title.trim()
+
+        if (!trimmedTitle || !genre || !price) {
+            setError("タイトル・ジャンル・価格は必須です")
+            return
+        }
+
+        const payload: AddItemPayload = {
+            title: trimmedTitle,
+            genre,
+            status,
+            price: Number(price),
+            soldDate: soldDate || undefined,
+            discountDate: discountDate || undefined,
+            image: image || undefined,
+            marketplaces,
+        }
+
+        onAdd(payload)
+
+        // フォームをリセット
+        setTitle("")
+        setGenre(genres[0] ?? "")
+        setStatus("販売中")
+        setPrice("")
+        setSoldDate("")
+        setDiscountDate("")
+        setImage("")
+        setMarketplaces({
+            mercari: false,
+            yahoo: false,
+            rakuma: false,
+            instagram: false,
+        })
+        setError(null)
+
+        onClose()
     }
 
-    onAdd(payload)
-    onAdd(payload)
-    // 送信後はフォームをリセットしておく
-    setTitle("")
-    setPrice("")
-    setSoldDate("")
-    setDiscountDate("")
-    setImage("")
-    setMarketplaces({
-        mercari: false,
-        yahoo: false,
-        rakuma: false,
-        instagram: false,
-    })
-    setError(null)
-
     const previewSku =
-        genre && genres.length > 0 ? skuPreview(genre) : "ジャンルを選択してください"
+        genre && genres.length > 0
+            ? skuPreview(genre)
+            : "ジャンルを選択してください"
 
     return (
         <div className={styles.overlay}>
