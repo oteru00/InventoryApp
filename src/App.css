@@ -1,0 +1,14 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #FAF7F2;
+  color: #3F3832;
+}
+
+a{
+  text-decoration: none;
+  color: #3F3832;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
