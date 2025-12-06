@@ -17,9 +17,9 @@ export const TEXTS = {
     ADD_PRODUCT_SUBMIT: "追加",
     ADD_PRODUCT_KEEP: "保存",
     ADD_PRODUCT_CLOSE: "×",
-    ADD_PRODUCT_STATUS1: "×",
-    ADD_PRODUCT_CLOSE: "×",
-    ADD_PRODUCT_CLOSE: "×",
+    ADD_PRODUCT_STATUS1: "販売中",
+    ADD_PRODUCT_STATUS2: "×売約済",
+    ADD_PRODUCT_STATUS3: "保留",
 
 
     // AddItemDialog - フォーム
