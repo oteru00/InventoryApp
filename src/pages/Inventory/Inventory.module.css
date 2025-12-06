@@ -11,7 +11,7 @@
     font-weight: 600;
     margin-bottom: 16px;
     color: #3f3832;
-    
+
 }
 
 /* テーブルの外側 */
@@ -22,41 +22,78 @@
     overflow: hidden;
 }
 
-/* table */
+/* テーブル全体 */
 .table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-/* thead */
-.table thead tr {
+.thead {
     background: #f2ece7;
-    height: 48px;
 }
 
-.table th {
-    text-align: left;
+.th {
     padding: 12px 16px;
+    text-align: center;
+    color: #3f3832;
     font-weight: 600;
-    color: #3f3832;
-    font-size: 13px;
 }
 
-/* tbody */
-.table td {
-    padding: 12px 16px;
+.row {
+    height: 72px;
     border-bottom: 1px solid #e5ded6;
-    color: #3f3832;
+    background: #ffffff;
+    transition: background-color 0.15s ease;
 }
 
-/* 画像セル */
+.row:hover {
+    background: #faf7f2;
+}
+
+/* 3日以上値下げしていない行 */
+.rowStale {
+    background: #fff3f3;
+}
+
+.td {
+    padding: 10px 16px;
+    vertical-align: middle;
+}
+
+.tdTitle {
+    padding: 10px 16px;
+    font-weight: 600;
+}
+
+.tdPrice {
+    padding: 10px 16px;
+    font-weight: 600;
+}
+
+.tdLastDiscount {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: #9c8f87;
+}
+
+.rowStale .tdLastDiscount {
+    color: #e5484d;
+    font-weight: 600;
+}
+
+.tdEdit {
+    padding: 10px 16px;
+    text-align: center;
+}
+
+/* 画像ボックス */
 .imageBox {
     width: 64px;
     height: 64px;
-    background: #f6f6f6;
+    border-radius: 12px;
     border: 1px solid #e5ded6;
-    border-radius: 8px;
+    background: #f6f6f6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,31 +108,102 @@
     object-fit: cover;
 }
 
-/* 状態バッジ */
-.status {
+/* 管理番号 / 状態 */
+.skuText {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+}
+
+.statusWrapper {
     margin-top: 4px;
 }
 
-/* ヒットがない時のメッセージ */
-.noData {
+/* ステータスバッジ */
+.statusBadge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 11px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.statusOnSale {
+    background: #b46b4e;
+    color: #ffffff;
+}
+
+.statusSold {
+    background: #5b8a72;
+    color: #ffffff;
+}
+
+.statusHold {
+    background: #e5ded6;
+    color: #3f3832;
+}
+
+/* 出品先ドット */
+.marketDots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.marketDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #e5ded6;
+    /* OFF の色 */
+}
+
+.marketMercari {
+    background: #d9754f;
+}
+
+.marketYahoo {
+    background: #9c8f87;
+}
+
+.marketRakuma {
+    background: #5b8a72;
+}
+
+.marketInstagram {
+    background: #d9a441;
+}
+
+/* 今日の値下げバッジ */
+.discountBadge {
+    display: inline-block;
+    padding: 2px 10px;
+    font-size: 11px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.discountDone {
+    background: #5b8a72;
+    color: #ffffff;
+}
+
+.discountNone {
+    background: #f2f2f2;
+    color: #9c8f87;
+}
+
+/* 編集ボタン */
+.editButton {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* 空メッセージ */
+.emptyMessage {
+    padding: 24px 0;
     text-align: center;
-    padding: 32px 0;
     color: #9c8f87;
     font-size: 14px;
-}
-
-/* 行ホバー */
-.row:hover {
-    background: #faf7f2;
-}
-
-/* 値下げしていない商品（3日以上） */
-.stale {
-    background: #fff3f3;
-}
-
-/* 値下げ日（赤文字） */
-.staleDate {
-    color: #e5484d;
-    font-weight: 600;
 }

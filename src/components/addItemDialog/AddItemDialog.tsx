@@ -1,12 +1,6 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./AddItemDialog.module.css"
-
-type Marketplaces = {
-    mercari?: boolean
-    yahoo?: boolean
-    rakuma?: boolean
-    instagram?: boolean
-}
+import { TEXTS } from "../../const/texts"
 
 export type AddItemPayload = {
     title: string
@@ -19,12 +13,23 @@ export type AddItemPayload = {
     marketplaces?: Marketplaces
 }
 
+type Marketplaces = {
+    mercari?: boolean
+    yahoo?: boolean
+    rakuma?: boolean
+    instagram?: boolean
+}
+
+type AddItemDialogMode = "add" | "edit"
+
 type AddItemDialogProps = {
     open: boolean
     onClose: () => void
     onAdd: (payload: AddItemPayload) => void
     genres: string[]
     skuPreview: (genre: string) => string
+    mode?: AddItemDialogMode
+    initialItem?: AddItemPayload
 }
 
 export default function AddItemDialog({
@@ -33,7 +38,11 @@ export default function AddItemDialog({
     onAdd,
     genres,
     skuPreview,
+    mode = "add",
+    initialItem,
 }: AddItemDialogProps) {
+    const isEdit = mode === "edit"
+
     const [title, setTitle] = useState("")
     const [genre, setGenre] = useState(genres[0] ?? "")
     const [status, setStatus] = useState<AddItemPayload["status"]>("販売中")
@@ -49,28 +58,60 @@ export default function AddItemDialog({
     })
     const [error, setError] = useState<string | null>(null)
 
-    // ダイアログを開いていないときは何も描画しない
+    // ダイアログが開かれたときに初期値をセット
+    useEffect(() => {
+        if (!open) return
+
+        if (initialItem) {
+            // 編集モード：既存データで埋める
+            setTitle(initialItem.title)
+            setGenre(initialItem.genre)
+            setStatus(initialItem.status)
+            setPrice(String(initialItem.price))
+            setSoldDate(initialItem.soldDate ?? "")
+            setDiscountDate(initialItem.discountDate ?? "")
+            setImage(initialItem.image ?? "")
+            setMarketplaces({
+                mercari: !!initialItem.marketplaces?.mercari,
+                yahoo: !!initialItem.marketplaces?.yahoo,
+                rakuma: !!initialItem.marketplaces?.rakuma,
+                instagram: !!initialItem.marketplaces?.instagram,
+            })
+        } else {
+            // 追加モード：空でリセット
+            setTitle("")
+            setGenre(genres[0] ?? "")
+            setStatus("販売中")
+            setPrice("")
+            setSoldDate("")
+            setDiscountDate("")
+            setImage("")
+            setMarketplaces({
+                mercari: false,
+                yahoo: false,
+                rakuma: false,
+                instagram: false,
+            })
+        }
+        setError(null)
+    }, [open, initialItem, genres])
+
     if (!open) return null
 
     // 出品先のトグル
     const handleToggleMarketplace = (key: keyof Marketplaces) => {
-        setMarketplaces((prev) => ({
-            ...prev,
-            [key]: !prev[key],
-        }))
+        setMarketplaces((prev) => ({ ...prev, [key]: !prev[key] }))
     }
 
-    // 追加ボタン押下時
+    // 送信ボタン押下時
     const handleSubmit = () => {
-        const trimmedTitle = title.trim()
-
-        if (!trimmedTitle || !genre || !price) {
+        if (!title.trim() || !genre || !price) {
             setError("タイトル・ジャンル・価格は必須です")
             return
         }
 
         const payload: AddItemPayload = {
-            title: trimmedTitle,
+            title: title.trim(),
             genre,
             status,
             price: Number(price),
@@ -80,24 +121,7 @@ export default function AddItemDialog({
             marketplaces,
         }
 
-        onAdd(payload)
-
-        // フォームをリセット
-        setTitle("")
-        setGenre(genres[0] ?? "")
-        setStatus("販売中")
-        setPrice("")
-        setSoldDate("")
-        setDiscountDate("")
-        setImage("")
-        setMarketplaces({
-            mercari: false,
-            yahoo: false,
-            rakuma: false,
-            instagram: false,
-        })
-        setError(null)
-
+        onAdd(payload) // Add / Edit 両方で使う
         onClose()
     }
 
@@ -111,7 +135,9 @@ export default function AddItemDialog({
             <div className={styles.dialog}>
                 {/* ヘッダー */}
                 <div className={styles.header}>
-                    <h2 className={styles.title}>商品追加</h2>
+                    <h2 className={styles.title}>
+                        {isEdit ? "商品編集" : "商品追加"}
+                    </h2>
                     <button className={styles.closeButton} onClick={onClose}>
                         ×
                     </button>
@@ -254,10 +280,12 @@ export default function AddItemDialog({
                 {/* フッター */}
                 <div className={styles.footer}>
                     <button className={styles.cancelButton} onClick={onClose}>
-                        キャンセル
+                        {TEXTS.ADD_PRODUCT_CANCEL}
                     </button>
                     <button className={styles.addButton} onClick={handleSubmit}>
-                        追加
+                        {isEdit
+                            ? TEXTS.ADD_PRODUCT_SUBMIT
+                            : TEXTS.ADD_PRODUCT_KEEP}
                     </button>
                 </div>
             </div>

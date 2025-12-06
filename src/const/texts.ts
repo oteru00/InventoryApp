@@ -15,6 +15,7 @@ export const TEXTS = {
     ADD_PRODUCT_TITLE: "商品追加",
     ADD_PRODUCT_CANCEL: "キャンセル",
     ADD_PRODUCT_SUBMIT: "追加",
+    ADD_PRODUCT_KEEP: "保存",
     ADD_PRODUCT_CLOSE: "×",
 
     // AddItemDialog - フォーム
@@ -40,7 +41,8 @@ export const TEXTS = {
     TABLE_MARKETPLACES: "出品先",
     TABLE_DISCOUNT_TODAY: "今日の値下げ",
     TABLE_LAST_DISCOUNT: "最終値下げ日",
-    TABLE_ACTION: "操作",
+    TABLE_EDIT: "編集",
+    TABLE_EDIT_BUTTON: "📃",
 
     NO_DATA: "該当する在庫はありません",
 } as const
