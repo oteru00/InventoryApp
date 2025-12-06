@@ -17,6 +17,10 @@ export const TEXTS = {
     ADD_PRODUCT_SUBMIT: "追加",
     ADD_PRODUCT_KEEP: "保存",
     ADD_PRODUCT_CLOSE: "×",
+    ADD_PRODUCT_STATUS1: "×",
+    ADD_PRODUCT_CLOSE: "×",
+    ADD_PRODUCT_CLOSE: "×",
+
 
     // AddItemDialog - フォーム
     IMAGE_LABEL: "商品画像（任意）",

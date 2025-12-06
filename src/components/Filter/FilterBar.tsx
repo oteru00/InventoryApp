@@ -156,7 +156,7 @@ export default function FilterBar({ value, onChange, genres }: Props) {
                         }
                     >
                         <option value="all">すべて</option>
-                        <option value="yes">すべて</option>
+                        <option value="yes">あり</option>
                         <option value="no">なし</option>
                     </select>
                 </div>
