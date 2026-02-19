@@ -29,13 +29,13 @@ export function useAddItemForm({ open, genres, skuPreview, initialItem }: Params
     })
     const [error, setError] = useState<string | null>(null)
 
-    // open時に初期化
+    // ダイアログが開いたタイミングで、編集か新規追加かを判定し、フォームの状態を適切な初期値にリセットする処理
     useEffect(() => {
-        if (!open) return
+        if (!open) return //ダイアログが開かれていないときは処理を実行しない。論理否定（NOT）演算子
 
-        if (initialItem) {
-            setTitle(initialItem.title)
-            setPrice(String(initialItem.price))
+        if (initialItem) { //initialItem(アイテム情報) があるかどうかで処理を分岐。あれば編集(if)、なければ新規追加(else)
+            setTitle(initialItem.title) //既存のデータをフォームにセット
+            setPrice(String(initialItem.price)) //number（数値）のまま渡すと 警告や不整合を起こすかも、安全のために string（文字列）に変換
             setStartDate(initialItem.startDate ?? "")
             setSoldDate(initialItem.soldDate ?? "")
             setImage(initialItem.image ?? "")
@@ -47,7 +47,7 @@ export function useAddItemForm({ open, genres, skuPreview, initialItem }: Params
             })
             setSelectedGenre(initialItem.genre ?? "")
             setNewGenre("")
-        } else {
+        } else { //全ての値を空にする
             setTitle("")
             setPrice("")
             setStartDate("")
@@ -58,8 +58,8 @@ export function useAddItemForm({ open, genres, skuPreview, initialItem }: Params
             setNewGenre("")
         }
 
-        setError(null)
-    }, [open, initialItem, genres])
+        setError(null) //以前のエラーメッセージを消す
+    }, [open, initialItem, genres]) //動作タイミング指定(ダイアログを開いた時、編集対象が変わった時、ジャンル一覧が更新された時)
 
     const finalGenre = useMemo(() => newGenre.trim() || selectedGenre.trim(), [newGenre, selectedGenre])
 

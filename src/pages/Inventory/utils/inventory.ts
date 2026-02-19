@@ -1,13 +1,9 @@
-import type AddItemDialog from "../../../components/addItemDialog/AddItemDialog"
-import type { InventoryItem, ItemStatus } from "../types"
-import { Timestamp } from "firebase/firestore"
 
-// AddItemPayload型をAddItemDialogからimportしたい場合は、InventoryPage側で型を渡す方式でもOK。
-// ここでは「payloadの形が同じ」前提で最低限の型だけ定義します。
+import type { InventoryItem, ItemStatus } from "../types"
+
 export type AddItemPayload = {
     title: string
     genre: string
-    status?: any // ★使わない（normalizeで決める）
     price: number
     startDate?: string
     soldDate?: string
