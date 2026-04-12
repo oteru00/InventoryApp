@@ -2,6 +2,7 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
+import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
     apiKey: "AIzaSyA44EFKpoewdA-pLS2zv-w_eKv8EXBz0_8",
@@ -19,6 +20,8 @@ const app = initializeApp(firebaseConfig)
 // Firestore のインスタンス
 export const db = getFirestore(app)
 export const storage = getStorage(app)
+export const auth = getAuth(app)
+
 
 // app を使いたい場合用（今は使ってなくてもOK）
 export { app }

@@ -11,13 +11,17 @@ import {
     serverTimestamp,
     Timestamp,
     updateDoc,
+    where,
 } from "firebase/firestore"
 import { db } from "../../../firebase"
+import { useAuth } from "../../../auth/useAuth"
 import type { InventoryItem, ItemStatus } from "../types"
 import { normalize, nextSkuFromItems, type AddItemPayload } from "../utils/inventory"
 import { DEFAULT_GENRES } from "../types"
 
 export const useInventoryItems = () => {
+    const { user, loading } = useAuth()
+
     const [items, setItems] = useState<InventoryItem[]>([])
     const [editingItem, setEditingItem] = useState<InventoryItem | null>(null)
 
@@ -36,7 +40,18 @@ export const useInventoryItems = () => {
 
     // Firestore購読
     useEffect(() => {
-        const q = query(collection(db, "inventoryItems"), orderBy("createdAt", "desc"))
+        if (loading) return
+
+        if (!user) {
+            setItems([])
+            return
+        }
+
+        const q = query(
+            collection(db, "inventoryItems"),
+            where("userId", "==", user.uid),
+            orderBy("createdAt", "desc")
+        )
 
         const unsubscribe = onSnapshot(q, (snap) => {
             const result: InventoryItem[] = snap.docs.map((docSnap) => {
@@ -66,14 +81,19 @@ export const useInventoryItems = () => {
         })
 
         return () => unsubscribe()
-    }, [])
+    }, [user, loading])
 
     // 追加
     const addItem = async (payload: AddItemPayload) => {
+        if (!user) {
+            throw new Error("ログインユーザーが見つかりません")
+        }
+
         const sku = nextSkuFromItems(items, payload.genre)
         const { startDate, soldDate, status } = normalize(payload)
 
         const docData: any = {
+            userId: user.uid,
             sku,
             title: payload.title,
             genre: payload.genre,
@@ -95,6 +115,10 @@ export const useInventoryItems = () => {
 
     // 更新
     const updateItem = async (id: string, payload: AddItemPayload) => {
+        if (!user) {
+            throw new Error("ログインユーザーが見つかりません")
+        }
+
         const ref = doc(db, "inventoryItems", id)
         const current = items.find((x) => x.id === id)
 
@@ -110,6 +134,7 @@ export const useInventoryItems = () => {
         const didDiscount = nextPrice < prevPrice
 
         const patch: Record<string, any> = {
+            userId: user.uid,
             title: payload.title,
             genre: payload.genre,
             sku: nextSkuValue,
@@ -130,10 +155,15 @@ export const useInventoryItems = () => {
 
     // 削除（売約済は不可）
     const deleteItem = async (item: InventoryItem) => {
+        if (!user) {
+            throw new Error("ログインユーザーが見つかりません")
+        }
+
         if (item.status === "売約済") {
             alert("売約済の商品は削除できません。")
             return
         }
+
         const ok = window.confirm("この商品を削除しますか？\n※元に戻せません")
         if (!ok) return
 
@@ -145,10 +175,8 @@ export const useInventoryItems = () => {
         items,
         genres,
         skuPreview,
-
         editingItem,
         setEditingItem,
-
         addItem,
         updateItem,
         deleteItem,
