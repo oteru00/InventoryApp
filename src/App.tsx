@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-ro
 import { ROUTES } from './const/const'
 import Inventory from './pages/Inventory/Inventory'
 import AnalyticsPage from './pages/analytics/AnalyticsPage'
-import SettingsPage from './pages/settingspage/SettingsPage'
 import Header from './components/header/Header'
 import { useState } from 'react'
 
@@ -26,7 +25,6 @@ function AppInner() {
       <Routes>
         <Route path={ROUTES.INVENTORY} element={<Inventory isAddOpen={isAddOpen} onCloseAdd={() => setIsAddOpen(false)} />} />
         <Route path={ROUTES.ANALYTICS} element={<AnalyticsPage />} />
-        <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
       </Routes>
     </>
   )
