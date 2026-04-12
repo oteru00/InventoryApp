@@ -1,4 +1,6 @@
 export const ROUTES = {
-    INVENTORY: "/",
+    LOGIN: "/login",
+    SIGNUP:"/sighup",
+    INVENTORY: "/inventory",
     ANALYTICS: "/analytics",
 }
