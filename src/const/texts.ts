@@ -83,4 +83,10 @@ export const TEXTS = {
     FILTER_IMAGE_NO: "なし",
     FILTER_CLEAR: "条件クリア",
 
+    //アナリティクスページ
+    ANALYTICSICS_TARGETYEAR: "対象年",
+    ANALYTICSICS_YEAR: "年",
+    ANALYTICSICS_TARGETMONTH: "対象月",
+    ANALYTICSICS_MONTH: "月",
+
 } as const

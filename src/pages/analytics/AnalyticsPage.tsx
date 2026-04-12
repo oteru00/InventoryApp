@@ -1,3 +1,4 @@
+import { TEXTS } from "../../const/texts"
 import styles from "./AnalyticsPage.module.css"
 import GenreSalesChart from "./components/GenreSalesChart"
 import MonthlyDetailTable from "./components/MonthlyDetailTable"
@@ -23,11 +24,11 @@ export default function AnalyticsPage() {
 
   return (
     <main className={styles.wrapper}>
-      <h2 className={styles.title}>販売分析</h2>
+      <h2 className={styles.title}>{TEXTS.ANALYTICS_TITLE}</h2>
 
       <section className={styles.controls}>
         <div className={styles.controlGroup}>
-          <label className={styles.label}>対象年</label>
+          <label className={styles.label}>{TEXTS.ANALYTICSICS_TARGETYEAR}</label>
           <select
             className={styles.select}
             value={year ?? ""}
@@ -35,14 +36,14 @@ export default function AnalyticsPage() {
           >
             {yearOptions.map((y) => (
               <option key={y} value={y}>
-                {y}年
+                {y}{TEXTS.ANALYTICSICS_YEAR}
               </option>
             ))}
           </select>
         </div>
 
         <div className={styles.controlGroup}>
-          <label className={styles.label}>対象月</label>
+          <label className={styles.label}>{TEXTS.ANALYTICSICS_TARGETMONTH}</label>
           <select
             className={styles.select}
             value={month}
@@ -50,7 +51,7 @@ export default function AnalyticsPage() {
           >
             {monthOptions.map((m) => (
               <option key={m} value={m}>
-                {m}月
+                {m}{TEXTS.ANALYTICSICS_MONTH}
               </option>
             ))}
           </select>

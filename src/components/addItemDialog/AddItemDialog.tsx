@@ -50,23 +50,23 @@ export default function AddItemDialog({
 
     if (!open) return null
 
-    const handlePickFile = async (file: File) => {
-        form.setError(null)
-        uploader.setError(null)
+    //画像のアップロード
+    const handlePickFile = async (file: File) => {    //File 型のファイルを受け取り、非同期処理(async)する関数を定義
+        form.setError(null) //前回のフォームが残らないようにエラーをリセット
+        uploader.setError(null) //アップロード側も一度エラーをリセット
 
-        try {
-            const url = await uploader.upload(file)
-            form.setImage(url)
-        } catch (e) {
+        try { //tryで処理が成功した場合と失敗した場合の処理を分けている
+            const url = await uploader.upload(file) //awaitで非同期にして処理が完了した時にfileを受け取るようにしている
+            form.setImage(url) //アップロードされた画像をフォームに保存
+        } catch (e) { //失敗した際の処理
             const message = e instanceof Error ? e.message : TEXTS.ERROR_REQUIRED
-            form.setError(message)
+            form.setError(message) //
         }
     }
 
     const handleSubmit = () => {
         const validationError = form.validate({ uploading: uploader.uploading })
         if (validationError) {
-            // validate() 内の文言も TEXTS 化したいなら、useAddItemForm を次の章で修正する
             form.setError(validationError)
             return
         }
@@ -75,12 +75,8 @@ export default function AddItemDialog({
         onClose()
     }
 
-    // タイトルもTEXTS管理
     const dialogTitle = isEdit ? TEXTS.ADD_DIALOG_TITLE_EDIT : TEXTS.ADD_DIALOG_TITLE_ADD
 
-    // SKUプレビューの空文言もTEXTS管理したい場合：
-    // useAddItemForm 側で TEXTS.SKU_PREVIEW_EMPTY を使う or ここで fallback
-    // ここでは表示ラベルだけTEXTS化
     return (
         <DialogShell
             styles={styles}

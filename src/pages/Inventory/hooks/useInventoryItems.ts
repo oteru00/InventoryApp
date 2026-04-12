@@ -19,6 +19,32 @@ import type { InventoryItem, ItemStatus } from "../types"
 import { normalize, nextSkuFromItems, type AddItemPayload } from "../utils/inventory"
 import { DEFAULT_GENRES } from "../types"
 
+/**
+ * Firestoreに過去データとして Timestamp が混在していても、
+ * UI(= input type="date")で扱える "YYYY-MM-DD" に統一して返す。
+ * 今後の保存は normalize() が string を返すので、string保存に揃っていく。
+ */
+const toDateString = (v: any): string | undefined => {
+    if (!v) return undefined
+
+    // string: "YYYY-MM-DD"
+    if (typeof v === "string") {
+        const s = v.trim()
+        return s ? s : undefined
+    }
+
+    // Timestamp
+    if (v instanceof Timestamp) {
+        const d = v.toDate()
+        const y = d.getFullYear()
+        const m = String(d.getMonth() + 1).padStart(2, "0")
+        const day = String(d.getDate()).padStart(2, "0")
+        return `${y}-${m}-${day}`
+    }
+
+    return undefined
+}
+
 export const useInventoryItems = () => {
     const { user, loading } = useAuth()
 
@@ -57,8 +83,12 @@ export const useInventoryItems = () => {
             const result: InventoryItem[] = snap.docs.map((docSnap) => {
                 const data = docSnap.data() as any
 
-                const soldDate = typeof data.soldDate === "string" ? data.soldDate : undefined
-                const status: ItemStatus = soldDate?.trim() ? "売約済" : "販売中"
+                // ★ここが完成ポイント：Timestamp混在でも必ず "YYYY-MM-DD" に統一
+                const startDate = toDateString(data.startDate)
+                const soldDate = toDateString(data.soldDate)
+
+                // ★status は payload からではなく soldDate 有無で決める（normalizeと同じ思想）
+                const status: ItemStatus = soldDate ? "売約済" : "販売中"
 
                 return {
                     id: docSnap.id,
@@ -67,11 +97,17 @@ export const useInventoryItems = () => {
                     genre: data.genre ?? "",
                     status,
                     price: typeof data.price === "number" ? data.price : 0,
-                    startDate: typeof data.startDate === "string" ? data.startDate : undefined,
+
+                    // string統一された値が入る
+                    startDate,
                     soldDate,
+
+                    // Timestamp運用のものは Timestamp のまま
                     discountedAt: data.discountedAt instanceof Timestamp ? data.discountedAt : undefined,
+
                     image: typeof data.image === "string" && data.image.trim() ? data.image : undefined,
                     marketplaces: data.marketplaces ?? {},
+
                     createdAt: data.createdAt,
                     updatedAt: data.updatedAt,
                 }
@@ -90,7 +126,7 @@ export const useInventoryItems = () => {
         }
 
         const sku = nextSkuFromItems(items, payload.genre)
-        const { startDate, soldDate, status } = normalize(payload)
+        const { startDate, soldDate, status } = normalize(payload) // ←ここは string/undefined のはず
 
         const docData: any = {
             userId: user.uid,
@@ -100,14 +136,14 @@ export const useInventoryItems = () => {
             price: payload.price,
             image: payload.image ?? null,
             marketplaces: payload.marketplaces ?? {},
-            status,
-            startDate,
-            soldDate,
+            status, // 念のため保存（表示にも使える）
+            startDate, // "YYYY-MM-DD" | undefined
+            soldDate, // "YYYY-MM-DD" | undefined
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         }
 
-        // undefinedは消す
+        // undefinedは消す（Firestoreに不要なフィールドを作らない）
         Object.keys(docData).forEach((k) => docData[k] === undefined && delete docData[k])
 
         await addDoc(collection(db, "inventoryItems"), docData)
@@ -141,9 +177,14 @@ export const useInventoryItems = () => {
             price: nextPrice,
             image: payload.image ?? null,
             marketplaces: payload.marketplaces ?? {},
+
+            // ★空ならフィールド削除（"未入力" として扱える）
             startDate: startDate ?? deleteField(),
             soldDate: soldDate ?? deleteField(),
+
+            // ★status は soldDate 有無に同期させる
             status,
+
             updatedAt: serverTimestamp(),
         }
 

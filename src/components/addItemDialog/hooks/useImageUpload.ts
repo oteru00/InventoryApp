@@ -17,7 +17,7 @@ export function useImageUpload(options?: UseImageUploadOptions) {
     const upload = async (file: File) => {
         setError(null)
 
-        // ✅ サイズ制限
+        //画像のサイズ制限
         if (file.size > maxSizeMB * 1024 * 1024) {
             const msg = `画像サイズが大きすぎます（${maxSizeMB}MBまで）`
             setError(msg)

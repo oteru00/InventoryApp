@@ -9,9 +9,8 @@ import InventoryTable from "./components/InventoryTable"
 import { useInventoryItems } from "./hooks/useInventoryItems"
 import { useInventoryFilters } from "./hooks/useInventoryFilters"
 
-export default function InventoryPage({ isAddOpen, onCloseAdd }: InventoryProps) {
+export default function InventoryPage({ isAddOpen, onCloseAdd }: InventoryProps) {//
   const todayYmd = getLocalYmd()
-
   const {
     items,
     genres,
